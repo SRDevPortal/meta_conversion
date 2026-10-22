@@ -1,0 +1,11 @@
+[project]
+name = "meta_conversion"
+version = "0.1.0"
+description = "Paid invoice CTWA conversion reporting"
+authors = [{name = "SRIAAS", email = "admin@example.com"}]
+requires-python = ">=3.10"
+dependencies = ["requests>=2.28"]
+
+[build-system]
+requires = ["flit_core>=3.4,<4"]
+build-backend = "flit_core.buildapi"

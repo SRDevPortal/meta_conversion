@@ -1,0 +1,88 @@
+{
+  "doctype": "DocType",
+  "name": "Meta Conversion Settings",
+  "module": "Meta Conversion",
+  "engine": "InnoDB",
+  "istable": 0,
+  "issingle": 1,
+  "field_order": [
+    "enabled",
+    "trigger_status",
+    "go_live",
+    "encounter_types",
+    "sales_types",
+    "encounter_places",
+    "provider_url",
+    "api_token",
+    "test_mode"
+  ],
+  "fields": [
+    {
+      "fieldname": "enabled",
+      "label": "Enabled",
+      "fieldtype": "Check"
+    },
+    {
+      "fieldname": "trigger_status",
+      "label": "Trigger Status",
+      "fieldtype": "Select",
+      "options": "Paid",
+      "default": "Paid",
+      "reqd": 1
+    },
+    {
+      "fieldname": "go_live",
+      "label": "Go Live",
+      "fieldtype": "Datetime",
+      "reqd": 1,
+      "description": "Only invoices created on or after this cutoff qualify. Set before enabling; historical invoices are excluded."
+    },
+    {
+      "fieldname": "encounter_types",
+      "label": "Encounter Types",
+      "fieldtype": "Table MultiSelect",
+      "options": "Meta Conversion Type Filter"
+    },
+    {
+      "fieldname": "sales_types",
+      "label": "Sales Types",
+      "fieldtype": "Table MultiSelect",
+      "options": "Meta Conversion Sales Filter"
+    },
+    {
+      "fieldname": "encounter_places",
+      "label": "Encounter Places",
+      "fieldtype": "Table MultiSelect",
+      "options": "Meta Conversion Place Filter"
+    },
+    {
+      "fieldname": "provider_url",
+      "label": "Provider Url",
+      "fieldtype": "Data",
+      "description": "HTTPS Haptik base URL, without the conversions endpoint path."
+    },
+    {
+      "fieldname": "api_token",
+      "label": "Api Token",
+      "fieldtype": "Password"
+    },
+    {
+      "fieldname": "test_mode",
+      "label": "Test Mode",
+      "fieldtype": "Check",
+      "default": "1",
+      "description": "Local eligibility check only. No request is sent."
+    }
+  ],
+  "permissions": [
+    {
+      "role": "System Manager",
+      "read": 1,
+      "write": 1,
+      "create": 0,
+      "report": 1,
+      "export": 1
+    }
+  ],
+  "track_changes": 1
+}

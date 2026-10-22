@@ -1,0 +1,11 @@
+app_name = "meta_conversion"
+app_title = "Meta Conversion"
+app_publisher = "SRIAAS"
+app_description = "Paid invoice CTWA conversion reporting"
+app_email = "admin@example.com"
+app_license = "MIT"
+required_apps = ["erpnext", "healthcare", "crm", "sriaas_clinic"]
+after_install = "meta_conversion.install.setup"
+after_migrate = "meta_conversion.install.setup"
+doc_events = {"Sales Invoice": {"on_update": "meta_conversion.api.invoice_changed", "on_update_after_submit": "meta_conversion.api.invoice_changed"}}
+scheduler_events = {"cron": {"*/5 * * * *": ["meta_conversion.api.scan"]}}

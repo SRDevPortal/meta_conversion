@@ -1,0 +1,82 @@
+{
+  "doctype": "DocType",
+  "name": "Meta Conversion Event",
+  "module": "Meta Conversion",
+  "engine": "InnoDB",
+  "istable": 0,
+  "issingle": 0,
+  "field_order": [
+    "sales_invoice",
+    "encounter",
+    "crm_lead",
+    "status",
+    "amount",
+    "qualified_at",
+    "test_mode",
+    "detail"
+  ],
+  "fields": [
+    {
+      "fieldname": "sales_invoice",
+      "label": "Sales Invoice",
+      "fieldtype": "Link",
+      "options": "Sales Invoice",
+      "reqd": 1,
+      "unique": 1,
+      "in_list_view": 1
+    },
+    {
+      "fieldname": "encounter",
+      "label": "Encounter",
+      "fieldtype": "Link",
+      "options": "Patient Encounter"
+    },
+    {
+      "fieldname": "crm_lead",
+      "label": "Crm Lead",
+      "fieldtype": "Link",
+      "options": "CRM Lead"
+    },
+    {
+      "fieldname": "status",
+      "label": "Status",
+      "fieldtype": "Select",
+      "options": "Pending\nSending\nProvider Accepted\nFailed\nUnknown\nSkipped\nTested",
+      "in_list_view": 1
+    },
+    {
+      "fieldname": "amount",
+      "label": "Amount",
+      "fieldtype": "Currency",
+      "options": "INR"
+    },
+    {
+      "fieldname": "qualified_at",
+      "label": "Qualified At",
+      "fieldtype": "Datetime",
+      "description": "Time first observed eligible; scheduled detection may lag the Paid transition."
+    },
+    {
+      "fieldname": "test_mode",
+      "label": "Test Mode",
+      "fieldtype": "Check"
+    },
+    {
+      "fieldname": "detail",
+      "label": "Detail",
+      "fieldtype": "Small Text"
+    }
+  ],
+  "permissions": [
+    {
+      "role": "System Manager",
+      "read": 1,
+      "write": 0,
+      "create": 0,
+      "report": 1,
+      "export": 1
+    }
+  ],
+  "track_changes": 1,
+  "autoname": "hash"
+}
