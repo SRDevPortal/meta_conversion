@@ -38,3 +38,19 @@ normal users. Refunds after acceptance are not automatically reported.
 
 Install: `bench get-app /path/to/meta_conversion` then
 `bench --site SITE install-app meta_conversion`. Integration starts disabled.
+
+For a fresh bench, fetch the app with:
+
+```bash
+bench get-app https://github.com/SRDevPortal/meta_conversion.git --branch develop
+bench --site SITE install-app meta_conversion
+```
+
+Install the required apps on the site first: ERPNext, Healthcare, CRM and
+`sriaas_clinic` (see `required_apps` in `meta_conversion/hooks.py`).
+
+Keep `meta_conversion/patches.txt` in the repository even when there are no
+migration patches. Bench requires it, together with `hooks.py` and `modules.txt`,
+to recognize the app and include it in `sites/apps.txt`. Without it, a fresh
+`bench get-app` can install the Python package but fail during the asset build
+with `The "paths[0]" argument must be of type string. Received undefined`.
