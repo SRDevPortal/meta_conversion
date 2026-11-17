@@ -4,7 +4,22 @@ Configurable submitted-invoice CTWA Purchase reporting for Frappe v15.
 
 ## Setup and migration
 
-Install ERPNext, Healthcare, CRM, sriaas_clinic, and wa_chat_hub first.
+Install ERPNext, Healthcare, CRM, and wa_chat_hub first, plus your clinic
+customizations (sriaas_clinic or siya_clinic). Do not install both clinic apps
+just to satisfy Meta Conversion. Compatibility is validated by DocTypes,
+field types, and link targets rather than the clinic app name.
+
+Encounter type/place filters support either Select options or Link masters.
+For Link fields, setup copies document names from the linked master, restricted
+to is_active=1 and disabled=0 where those fields exist. Existing filter records
+and settings are preserved; inactive old choices are not automatically deleted.
+Run setup after adding new master values to refresh available choices.
+Sales type must link to SR Sales Type. Missing/incompatible source fields produce
+an actionable validation error before setup writes settings.
+
+Eternity deployment requires fetching this updated app into eternity-bench and
+installing it on the intended site; updating another bench does not install it
+there. Site settings, credentials, and conversion events remain independent.
 Run bench --site SITE migrate after updating this app, then restart workers
 using your normal deployment procedure.
 
@@ -85,7 +100,7 @@ and provider-side idempotency are not implemented.
 ## Verification
 
 From the app directory, run:
-    ../../env/bin/python -m unittest test_rules test_delivery -v
+    ../../env/bin/python -m unittest test_rules test_delivery test_compatibility -v
 
 These are isolated tests, without database access or external requests.
 After migration, run:
