@@ -13,7 +13,12 @@
     "amount",
     "qualified_at",
     "test_mode",
-    "detail"
+    "detail",
+    "channel_account",
+    "source_conversation",
+    "invoice_status",
+    "attribution_snapshot",
+    "configuration_snapshot"
   ],
   "fields": [
     {
@@ -54,7 +59,7 @@
       "fieldname": "qualified_at",
       "label": "Qualified At",
       "fieldtype": "Datetime",
-      "description": "Time first observed eligible; scheduled detection may lag the Paid transition."
+      "description": "When eligibility was first observed for this qualification; not a gateway payment timestamp."
     },
     {
       "fieldname": "test_mode",
@@ -65,6 +70,35 @@
       "fieldname": "detail",
       "label": "Detail",
       "fieldtype": "Small Text"
+    },
+    {
+      "fieldname": "channel_account",
+      "label": "Source Account",
+      "fieldtype": "Link",
+      "options": "Chat Channel Account"
+    },
+    {
+      "fieldname": "source_conversation",
+      "label": "Source Conversation",
+      "fieldtype": "Link",
+      "options": "Chat Conversation"
+    },
+    {
+      "fieldname": "invoice_status",
+      "label": "Qualifying Invoice Status",
+      "fieldtype": "Data"
+    },
+    {
+      "fieldname": "attribution_snapshot",
+      "label": "Attribution Snapshot",
+      "fieldtype": "Code",
+      "options": "JSON"
+    },
+    {
+      "fieldname": "configuration_snapshot",
+      "label": "Configuration Snapshot",
+      "fieldtype": "Code",
+      "options": "JSON"
     }
   ],
   "permissions": [

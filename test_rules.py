@@ -24,6 +24,26 @@ class RulesTest(unittest.TestCase):
         self.filters["sr_encounter_type"].add("Appointment")
         self.assertEqual(eligible(self.invoice, self.encounter | {"sr_encounter_type": "Appointment"}, self.filters), "")
 
+    def test_configured_statuses(self):
+        for status in ("Paid", "Partly Paid", "Unpaid", "Overdue"):
+            invoice = self.invoice | {"status": status}
+            self.assertEqual(eligible(invoice, self.encounter, self.filters, {status}), "")
+            self.assertTrue(eligible(invoice, self.encounter, self.filters, set()))
+
+    def test_unpaid_does_not_require_cod(self):
+        self.assertEqual(eligible(self.invoice | {"status": "Unpaid"}, self.encounter, self.filters, {"Unpaid"}), "")
+
+    def test_status_configuration_cannot_allow_invalid_documents(self):
+        for patch in ({"docstatus": 0}, {"docstatus": 2}, {"is_return": 1},
+                      {"status": "Cancelled"}, {"status": "Draft"}, {"status": "Return"}):
+            invoice = self.invoice | patch
+            self.assertTrue(eligible(invoice, self.encounter, self.filters, {invoice["status"]}))
+
+    def test_partial_reports_full_value(self):
+        invoice = self.invoice | {"status": "Partly Paid", "outstanding_amount": 800}
+        self.assertEqual(eligible(invoice, self.encounter, self.filters, {"Partly Paid"}), "")
+        self.assertEqual(amount(invoice), 1000)
+
     def test_rounding(self):
         self.assertEqual(amount(self.invoice | dict(grand_total=999.8)), 1000)
         self.assertEqual(amount(self.invoice | dict(grand_total=999.8, disable_rounded_total=1)), 999.8)

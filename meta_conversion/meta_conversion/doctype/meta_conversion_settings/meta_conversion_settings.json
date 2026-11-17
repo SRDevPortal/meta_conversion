@@ -8,6 +8,10 @@
   "field_order": [
     "enabled",
     "trigger_status",
+    "allowed_invoice_statuses",
+    "channel_account",
+    "provider_contract_confirmed",
+    "status_configuration_initialized",
     "go_live",
     "encounter_types",
     "sales_types",
@@ -28,7 +32,9 @@
       "fieldtype": "Select",
       "options": "Paid",
       "default": "Paid",
-      "reqd": 1
+      "reqd": 0,
+      "hidden": 1,
+      "read_only": 1
     },
     {
       "fieldname": "go_live",
@@ -59,12 +65,16 @@
       "fieldname": "provider_url",
       "label": "Provider Url",
       "fieldtype": "Data",
-      "description": "HTTPS Haptik base URL, without the conversions endpoint path."
+      "description": "Approved Interakt API origin. The conversion endpoint must be confirmed with Interakt.",
+      "default": "https://api.interakt.ai"
     },
     {
       "fieldname": "api_token",
       "label": "Api Token",
-      "fieldtype": "Password"
+      "fieldtype": "Password",
+      "hidden": 1,
+      "read_only": 1,
+      "description": "Legacy credential; no longer used."
     },
     {
       "fieldname": "test_mode",
@@ -72,6 +82,34 @@
       "fieldtype": "Check",
       "default": "1",
       "description": "Local eligibility check only. No request is sent."
+    },
+    {
+      "fieldname": "allowed_invoice_statuses",
+      "label": "Allowed Invoice Statuses",
+      "fieldtype": "Table MultiSelect",
+      "options": "Meta Conversion Status Filter",
+      "description": "Unpaid includes both COD and prepaid invoices. All other encounter filters must also match."
+    },
+    {
+      "fieldname": "channel_account",
+      "label": "Chat Channel Account",
+      "fieldtype": "Link",
+      "options": "Chat Channel Account",
+      "description": "Reuse the Interakt API key stored on this account."
+    },
+    {
+      "fieldname": "provider_contract_confirmed",
+      "label": "Provider Contract Confirmed",
+      "fieldtype": "Check",
+      "default": "0",
+      "description": "Enable only after Interakt confirms /v1/public/track/conversions/, this payload, and access for the selected account."
+    },
+    {
+      "fieldname": "status_configuration_initialized",
+      "label": "Status Configuration Initialized",
+      "fieldtype": "Check",
+      "hidden": 1,
+      "read_only": 1
     }
   ],
   "permissions": [

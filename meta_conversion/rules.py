@@ -1,6 +1,16 @@
-def eligible(invoice, encounter, selections):
-    if invoice.get("docstatus") != 1 or invoice.get("status") != "Paid" or invoice.get("is_return"):
-        return "Invoice is not a submitted Paid sale"
+SUPPORTED_STATUSES = frozenset({"Paid", "Partly Paid", "Unpaid", "Overdue"})
+
+
+def selected_statuses(settings):
+    return {row.value for row in (settings.get("allowed_invoice_statuses") or [])}
+
+
+def eligible(invoice, encounter, selections, statuses=None):
+    if invoice.get("docstatus") != 1 or invoice.get("is_return"):
+        return "Invoice is not a submitted sale"
+    allowed = {"Paid"} if statuses is None else set(statuses)
+    if invoice.get("status") not in (allowed & SUPPORTED_STATUSES):
+        return "Invoice status is not selected"
     if invoice.get("currency") != "INR":
         return "Only INR invoices are supported"
     if amount(invoice) <= 0:

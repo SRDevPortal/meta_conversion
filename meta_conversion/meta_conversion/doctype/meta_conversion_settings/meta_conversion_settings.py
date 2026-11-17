@@ -1,18 +1,26 @@
-from urllib.parse import urlparse
 import frappe
 from frappe.model.document import Document
+
+from meta_conversion.provider import get_account, validate_origin
+from meta_conversion.rules import SUPPORTED_STATUSES, selected_statuses
 
 
 class MetaConversionSettings(Document):
     def validate(self):
-        if self.trigger_status != "Paid":
-            frappe.throw("Only Paid invoice status is supported.")
+        statuses = selected_statuses(self)
+        if statuses - SUPPORTED_STATUSES:
+            frappe.throw("Unsupported invoice status selected.")
         if self.provider_url:
-            url = urlparse(self.provider_url)
-            if url.scheme != "https" or not url.hostname or url.username or url.password or url.query or url.fragment:
-                frappe.throw("Provider URL must be an HTTPS base URL without credentials, query, or fragment.")
+            validate_origin(self.provider_url)
+        if self.channel_account:
+            get_account(self)
         if self.enabled:
+            if not statuses:
+                frappe.throw("Select at least one invoice status.")
             if not all(self.get(f) for f in ("encounter_types", "sales_types", "encounter_places")):
                 frappe.throw("Select at least one encounter type, sales type, and encounter place.")
-            if not self.test_mode and (not self.provider_url or not self.get_password("api_token")):
-                frappe.throw("Provider URL and token are required for live reporting.")
+            get_account(self, require_key=not self.test_mode)
+            if not self.test_mode:
+                validate_origin(self.provider_url)
+                if not self.provider_contract_confirmed:
+                    frappe.throw("Confirm the Interakt conversion API contract before live reporting.")

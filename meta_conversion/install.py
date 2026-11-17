@@ -1,4 +1,5 @@
 import frappe
+from meta_conversion.rules import SUPPORTED_STATUSES
 from frappe.custom.doctype.custom_field.custom_field import create_custom_fields
 
 
@@ -10,7 +11,22 @@ def setup():
             if value.strip() and not frappe.db.exists(dt, value.strip()):
                 frappe.get_doc({"doctype": dt, "label": value.strip()}).insert(ignore_permissions=True)
     settings = frappe.get_single("Meta Conversion Settings")
-    if not settings.go_live:
+    for value in sorted(SUPPORTED_STATUSES):
+        if not frappe.db.exists("Meta Invoice Status", value):
+            frappe.get_doc({"doctype": "Meta Invoice Status", "label": value}).insert(ignore_permissions=True)
+    fresh = not settings.go_live
+    if not settings.get("status_configuration_initialized"):
+        if not settings.get("allowed_invoice_statuses"):
+            settings.append("allowed_invoice_statuses", {"value": "Paid"})
+        settings.go_live = settings.go_live or frappe.utils.now_datetime()
+        settings.status_configuration_initialized = 1
+        # Credential migration must never start live delivery automatically.
+        settings.enabled = 0
+        settings.test_mode = 1
+        settings.provider_contract_confirmed = 0
+        settings.provider_url = "https://api.interakt.ai"
+        settings.save(ignore_permissions=True)
+    if fresh:
         settings.go_live = frappe.utils.now_datetime()
         settings.test_mode = 1
         for value in ["Appointment", "Order"]:
